@@ -3,6 +3,9 @@
 const express = require('express');
 const path = require('path');
 
+const asciify = require('asciify-image');
+
+
 const resources = ['images', 'public'];
 
 const images = [
@@ -23,45 +26,52 @@ const app = express();
 //define routes
 //refactor
 app.get('/image', (req, resp) => {
+    const imageFile = randImage(images)
     resp.status(200);
     resp.format({
         'text/html': () => {
-            resp.send(`<img src="${randImage(images)}">`);
+            resp.send(`<img src="${imageFile}">`);
         },
         'images/png': () => {
             resp.sendfile(path.join(__dirname, 'images', imageFile));
         },
         'application/json': () => {
-            resp.send({})
+            resp.send({ imageFile });
+        },
+        'text/html': () => {
+            const options = {
+                color: true,
+                fit: 'box',
+                width: 20,
+                height: 20,
+                color: true
+            }
+            asciify(path.join(__dirname, 'images', imageFile), options,
+                (err, asciified) => {
+                    if (err) {
+                        resp.status(404).send(JSON.stringify(err));
+                        return;
+                    };
+                    resp.send(asciified);
+                    console.log(asciified);
+                })
         },
         'default': () => {
-            resp.status(406);
-            resp.send('Not Acceptable');
+            resp.status(406).send('Not Acceptable');
         }
     });
 })
-// //GET /image -->text/html
-// app.get('/image',
-//     (req, resp) => {
-//         const image = randImage(images)
-//         resp.status(200);
-//         resp.type('text/html');
-//         resp.send(`<img src="${randImage(images)}">` + "this is GET /image");
-//     }
-// );
 
-// //GEt /random-image -->image/png
-// app.get('/random-image', (req, resp) =>{
-//     const imageFile = randImage(images);
-//     resp.status(200);
-//     resp.type('image/png');
-//     resp.sendfile(path.join(__dirname, 'images', imageFile))
-// });
 
 for (let res of resources) {
     console.log(`adding ${res} to static`)
     app.use(express.static(path.join(__dirname, res)));
 }
+//catch all 
+app.use((req, resp) => {
+    resp.status(404);
+    resp.send(path.join(__dirname, 'images', '404.gif'));
+})
 
 
 //start the Express App
