@@ -1,0 +1,26 @@
+{
+  "name": "ssf-day3",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/loreinesantiagoo/ssf-day3.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/loreinesantiagoo/ssf-day3/issues"
+  },
+  "homepage": "https://github.com/loreinesantiagoo/ssf-day3#readme",
+  "dependencies": {
+    "express": "^4.16.3",
+    "express-handlebars": "^3.0.0",
+    "path": "^0.12.7",
+    "querystring": "^0.2.0",
+    "request": "^2.88.0"
+  }
+}
